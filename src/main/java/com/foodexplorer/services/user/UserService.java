@@ -1,4 +1,4 @@
-package com.foodexplorer.services.User;
+package com.foodexplorer.services.user;
 
 import com.foodexplorer.exceptions.custom.DataConflictException;
 import com.foodexplorer.exceptions.custom.DataNotFoundException;
@@ -55,8 +55,13 @@ public class UserService implements  iUserService {
         return DozzerMapper.parseObject(optionalUser.get(), UserResponseDto.class);
     }
 
-    public UserResponseDto updateUser(UserDto data) {
-        Optional<User> optionalUser = repository.findByEmail(data.getEmail());
+    public UserResponseDto updateUser(UserDto data, String email) {
+
+        /* TO-DO LIST
+            - Ao implementar o sistema de autenticação, substituir o findByEmail, por finById
+         */
+
+        Optional<User> optionalUser = repository.findByEmail(email);
 
         if(!optionalUser.isPresent()) {
             throw  new DataNotFoundException("Esse email não consta em nosso banco de dados.");

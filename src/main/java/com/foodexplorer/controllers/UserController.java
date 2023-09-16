@@ -2,7 +2,7 @@ package com.foodexplorer.controllers;
 
 import com.foodexplorer.model.dto.UserDto;
 import com.foodexplorer.model.dto.UserResponseDto;
-import com.foodexplorer.services.User.UserService;
+import com.foodexplorer.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PutMapping
-    ResponseEntity<UserResponseDto> getByEmail(@RequestBody UserDto request ) {
-        UserResponseDto user = userService.updateUser(request);
+    ResponseEntity<UserResponseDto> getByEmail(@RequestBody UserDto request, @RequestParam("email") String email ) {
+        UserResponseDto user = userService.updateUser(request, email);
         return ResponseEntity.ok().body(user);
     }
 
