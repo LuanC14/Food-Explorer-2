@@ -3,13 +3,6 @@ spring:
     url: jdbc:h2:mem:fejava
     username: fejava
     password:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: 661824185974-gcr1nmgp20ggasg53br3ctei7ebgei47.apps.googleusercontent.com
-#            client-secret: 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
   jpa:
     show-sql: false
     open-in-view: false
@@ -25,6 +18,7 @@ spring:
       settings:
         trace: false
         web-allow-others: false
-#server:
-#  servlet:
-#    context-path: /api/v1
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}

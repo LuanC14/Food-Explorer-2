@@ -7,12 +7,17 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity(name = "usuarios")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +34,10 @@ public class User {
     private String email;
 
     @NotNull
+    @Column(unique = true)
+    private String login;
+
+    @NotNull
     @Column(name = "senha")
     @Size(min = 8, max = 20)
     private String password;
@@ -37,8 +46,8 @@ public class User {
     private String photoProfileUrl;
 
     @NotNull
-    @Column(name = "admin")
-    private Boolean isAdmin = false;
+    @Column(name = "nivel_de_usuario")
+    public UserRole role;
 
     @CreationTimestamp()
     @Column(name = "criado_em")
@@ -48,9 +57,44 @@ public class User {
     @Column(name = "ultima_atualizacao")
     private Date updateAt;
 
-    public User() {
-//        this.name = name;
-//        this.email = email;
-//        this.password = hashedPassword;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UserRole.MASTER) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_MASTER"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        }  else if(this.role == UserRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
