@@ -9,7 +9,6 @@ public class UserResponseDTO {
     Long id;
     String name;
     String email;
-    String login;
     UserRole role;
     String photoProfileUrl;
 }

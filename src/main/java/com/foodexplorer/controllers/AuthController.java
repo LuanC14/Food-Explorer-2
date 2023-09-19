@@ -25,10 +25,15 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginDTO request) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok().body(new LoginResponseDTO(token));
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginDTO request) throws Exception {
+        try {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return ResponseEntity.ok().body(new LoginResponseDTO(token));
+        } catch(Exception e) {
+            throw new Exception("Email e/ou senha incorretos!");
+        }
+
     }
 }

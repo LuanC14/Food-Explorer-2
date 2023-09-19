@@ -12,5 +12,7 @@ public interface iUserService {
 
      UserResponseDTO updateUser(CreateOrUpdateUserDTO data);
 
+     void toggleLevelUser(String email, int level);
+
 
 }

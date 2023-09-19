@@ -2,7 +2,6 @@ package com.foodexplorer.services.user;
 
 import com.foodexplorer.exceptions.custom.DataConflictException;
 import com.foodexplorer.exceptions.custom.DataNotFoundException;
-import com.foodexplorer.exceptions.GlobalExceptionHandler;
 import com.foodexplorer.exceptions.custom.UnathourizedException;
 import com.foodexplorer.model.dto.CreateOrUpdateUserDTO;
 import com.foodexplorer.model.dto.UserResponseDTO;
@@ -10,8 +9,6 @@ import com.foodexplorer.model.entities.User;
 import com.foodexplorer.model.entities.UserRole;
 import com.foodexplorer.providers.mapper.DozzerMapper;
 import com.foodexplorer.repositories.UserRepository;
-import com.foodexplorer.services.token.TokenService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +57,7 @@ public class UserService implements  iUserService {
 
             return DozzerMapper.parseObject(getUserForSetRole, UserResponseDTO.class);
     }
-
+    @Override
     public UserResponseDTO updateUser(CreateOrUpdateUserDTO data) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -76,12 +73,13 @@ public class UserService implements  iUserService {
 
         user.setName(data.name() != null ? data.name() : user.getName());
         user.setEmail(data.email() != null ? data.email() : user.getEmail());
+        user.setLogin(data.email() != null ? data.email() : user.getEmail());
         user.setPassword(data.password() != null ? encoder.encode(data.password()) : user.getPassword());
         repository.save(user);
 
         return DozzerMapper.parseObject(user, UserResponseDTO.class);
     }
-
+    @Override
     public UserResponseDTO getByEmail(String email) {
 
         Optional<User> optionalUser = repository.findByEmail(email);
@@ -92,7 +90,7 @@ public class UserService implements  iUserService {
 
         return DozzerMapper.parseObject(optionalUser.get(), UserResponseDTO.class);
     }
-
+    @Override
     public void toggleLevelUser(String email, int level) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
