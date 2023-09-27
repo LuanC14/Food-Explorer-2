@@ -32,18 +32,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,  MvcRequestMatcher.Builder mvc) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,"/users").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/users/levels?").hasAnyRole("MASTER", "ADMIN")
+                        // Auth
+                        .requestMatchers(HttpMethod.POST, "/auth").permitAll()
+                        // Users
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/users/acess").hasRole("ADMIN")
+                        // MenuItems
+                        .requestMatchers(HttpMethod.GET, "/menuitem/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/menuitem").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/menuitem").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/menuitem").hasRole("ADMIN")
+                        // Ingredients
+                        .requestMatchers(HttpMethod.GET, "/ingredient/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/ingredient").hasRole( "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/ingredient").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
-               .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -51,13 +64,16 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
 
         return (web) -> web.ignoring()
-                .requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
+                .requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"))
+                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**"));
+
 
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return  authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

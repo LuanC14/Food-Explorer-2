@@ -1,4 +1,4 @@
-package com.foodexplorer.model.entities;
+package com.foodexplorer.model.entities.User;
 
 public enum UserRole {
     MASTER("master"),

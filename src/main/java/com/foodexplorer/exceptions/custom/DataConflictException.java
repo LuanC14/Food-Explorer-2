@@ -7,7 +7,7 @@ import java.io.Serial;
 
 @ResponseStatus(HttpStatus.CONFLICT)
 
-public class DataConflictException extends  RuntimeException {
+public class DataConflictException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
 

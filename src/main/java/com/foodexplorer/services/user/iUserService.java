@@ -1,18 +1,17 @@
 package com.foodexplorer.services.user;
 
-import com.foodexplorer.model.dto.CreateOrUpdateUserDTO;
-import com.foodexplorer.model.dto.UserResponseDTO;
-import jakarta.servlet.http.HttpServletRequest;
+import com.foodexplorer.model.dto.user.CreateUpdateUserDTO;
+import com.foodexplorer.model.dto.user.UserResponseDTO;
 
 public interface iUserService {
 
-     UserResponseDTO create(CreateOrUpdateUserDTO user);
+    UserResponseDTO create(CreateUpdateUserDTO user);
 
-     UserResponseDTO getByEmail(String email);
+    UserResponseDTO findByEmail(String email);
 
-     UserResponseDTO updateUser(CreateOrUpdateUserDTO data);
+    UserResponseDTO updateUser(CreateUpdateUserDTO data);
 
-     void toggleLevelUser(String email, int level);
+    void toggleLevelUser(String email, int level);
 
 
 }

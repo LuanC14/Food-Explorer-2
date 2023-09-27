@@ -1,5 +1,6 @@
-package com.foodexplorer.model.entities;
+package com.foodexplorer.model.entities.User;
 
+import com.foodexplorer.model.entities.MenuItem.MenuItem;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +49,7 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(name = "nivel_de_usuario")
-    public UserRole role;
+    private UserRole role;
 
     @CreationTimestamp()
     @Column(name = "criado_em")

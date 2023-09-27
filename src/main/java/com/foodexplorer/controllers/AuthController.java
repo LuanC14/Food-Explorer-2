@@ -1,8 +1,8 @@
 package com.foodexplorer.controllers;
 
-import com.foodexplorer.model.dto.LoginDTO;
-import com.foodexplorer.model.dto.LoginResponseDTO;
-import com.foodexplorer.model.entities.User;
+import com.foodexplorer.model.dto.auth.LoginDTO;
+import com.foodexplorer.model.dto.auth.LoginResponseDTO;
+import com.foodexplorer.model.entities.User.User;
 import com.foodexplorer.services.token.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginDTO request) throws Exception {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(request.login(), request.password());
             var auth = authenticationManager.authenticate(usernamePassword);
             var token = tokenService.generateToken((User) auth.getPrincipal());
             return ResponseEntity.ok().body(new LoginResponseDTO(token));
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new Exception("Email e/ou senha incorretos!");
         }
 

@@ -12,7 +12,7 @@ public class ExceptionResponse implements Serializable {
     private String message;
     private String details;
 
-    public ExceptionResponse( String message, String details) {
+    public ExceptionResponse(String message, String details) {
         this.timestamp = new Date();
         this.message = message;
         this.details = details;

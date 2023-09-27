@@ -67,6 +67,7 @@ public class GlobalExceptionHandler {
                 + rq.getDescription(true));
         return new ResponseEntity<>(new ExceptionResponse(ex.getMessage(), rq.getDescription(false)), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleAuthenticationException(UnathourizedException ex, WebRequest rq) {
         logger.error("Erro no método loadUserByUsernamede AuthenticationService! "

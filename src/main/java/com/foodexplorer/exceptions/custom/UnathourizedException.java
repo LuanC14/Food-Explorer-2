@@ -9,7 +9,8 @@ import java.io.Serial;
 public class UnathourizedException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
-    public  UnathourizedException(String message) {
+
+    public UnathourizedException(String message) {
         super(message);
     }
 }
