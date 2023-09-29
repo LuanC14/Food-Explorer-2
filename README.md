@@ -15,6 +15,8 @@ podendo principalmente, utilizar a funcionalidade de inserção e remoção de i
 - Open API (Swagger)
 
 ## Diagrama UML das entidades em Mermaid Framework
+
+``` mermaid 
 classDiagram
   class User {
     + id: Long
@@ -46,3 +48,4 @@ classDiagram
 
   User "1" *-- "0..*" MenuItem
   MenuItem "1" *-- "0..*" Ingredient
+```
