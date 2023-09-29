@@ -1,17 +1,20 @@
 package com.menufoods.services.menuItem;
 
+import com.menufoods.exceptions.custom.DataConflictException;
 import com.menufoods.exceptions.custom.DataNotFoundException;
-import com.menufoods.model.dto.item.CreateUpdateItemDTO;
-import com.menufoods.model.dto.item.MenuItemResponseDTO;
-import com.menufoods.model.entities.Ingredient.Ingredient;
-import com.menufoods.model.entities.MenuItem.MenuItem;
-import com.menufoods.model.entities.MenuItem.MenuItemType;
-import com.menufoods.model.entities.User.User;
+import com.menufoods.domain.dto.item.CreateUpdateItemDTO;
+import com.menufoods.domain.dto.item.MenuItemResponseDTO;
+import com.menufoods.domain.model.Ingredient;
+import com.menufoods.domain.model.MenuItem;
+import com.menufoods.domain.enums.MenuItemType;
+import com.menufoods.domain.model.User;
 import com.menufoods.repositories.MenuItemRepository;
+import com.menufoods.services.upload.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +26,17 @@ public class MenuItemService implements iMenuItemService {
     @Autowired
     MenuItemRepository repository;
 
+    @Autowired
+    UploadService uploadService;
+
     @Override
     public MenuItemResponseDTO create(CreateUpdateItemDTO data) {
+
+        var verifyInUse = repository.findByNameContainingIgnoreCase(data.name());
+
+        if(!verifyInUse.isEmpty()) {
+            throw new DataConflictException("Esse nome já está em uso");
+        }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
@@ -55,6 +67,29 @@ public class MenuItemService implements iMenuItemService {
         return new MenuItemResponseDTO(
                 menuItem.getId(), menuItem.getUser().getId(), menuItem.getName(),
                 menuItem.getDescription(), menuItem.getType(), ingredientsNameList, menuItem.getPhotoUrl());
+    }
+    @Override
+    public void uploadPhotoItem(MultipartFile photo, Long itemId) {
+        MenuItem item = repository.findById(itemId).get();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        if(item.getPhotoUrl() != null) {
+            String url = item.getPhotoUrl();
+            int lastIndex = url.lastIndexOf("/");
+            String key = url.substring(lastIndex + 1);
+            uploadService.deleteFile(key);
+        }
+
+        String filename = "item" + "_" + item.getName() + "." + photo.getOriginalFilename()
+                .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
+
+
+        String photoUri = uploadService.uploadFile(photo, filename);
+
+        item.setPhotoUrl(photoUri);
+        repository.save(item);
     }
 
     @Override
@@ -126,7 +161,7 @@ public class MenuItemService implements iMenuItemService {
     }
 
     @Override
-    public MenuItem getById(Long itemId) {
+    public MenuItem getMenuItemEntity(Long itemId) {
         return repository.findById(itemId).get();
     }
 }

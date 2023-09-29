@@ -21,4 +21,15 @@ spring:
 api:
   security:
     token:
-      secret: ${JWT_SECRET:my-secret-key}
+      secret: my-secret-key
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region: us-east-2
+    stack:
+      auto: false
+    bucket:
+      name: s3-menufoods
+      endpoint: https://s3.us-east-2.amazonaws.com/s3-menufoods

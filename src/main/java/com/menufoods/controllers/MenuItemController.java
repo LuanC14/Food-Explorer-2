@@ -1,12 +1,13 @@
 package com.menufoods.controllers;
 
-import com.menufoods.model.dto.item.CreateUpdateItemDTO;
-import com.menufoods.model.dto.item.MenuItemResponseDTO;
+import com.menufoods.domain.dto.item.CreateUpdateItemDTO;
+import com.menufoods.domain.dto.item.MenuItemResponseDTO;
 import com.menufoods.services.menuItem.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -37,6 +38,12 @@ public class MenuItemController {
     @GetMapping(value = "/all")
     ResponseEntity<List<MenuItemResponseDTO>> findAll() {
         return ResponseEntity.ok().body(service.findAll());
+    }
+
+    @PatchMapping
+    ResponseEntity uploadPhotoItem(@RequestParam("photo")MultipartFile photo, @RequestParam("id") Long id) {
+        service.uploadPhotoItem(photo, id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping

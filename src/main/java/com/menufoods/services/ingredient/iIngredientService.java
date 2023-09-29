@@ -1,7 +1,7 @@
 package com.menufoods.services.ingredient;
 
-import com.menufoods.model.dto.ingredient.CreateUpdateIngredientDTO;
-import com.menufoods.model.dto.ingredient.IngredientResponseDTO;
+import com.menufoods.domain.dto.ingredient.CreateUpdateIngredientDTO;
+import com.menufoods.domain.dto.ingredient.IngredientResponseDTO;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.menufoods.controllers;
 
-import com.menufoods.model.dto.auth.LoginDTO;
-import com.menufoods.model.dto.auth.LoginResponseDTO;
-import com.menufoods.model.entities.User.User;
+import com.menufoods.domain.dto.auth.LoginDTO;
+import com.menufoods.domain.dto.auth.LoginResponseDTO;
+import com.menufoods.domain.model.User;
 import com.menufoods.services.token.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

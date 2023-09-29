@@ -1,6 +1,6 @@
 package com.menufoods.services.token;
 
-import com.menufoods.model.entities.User.User;
+import com.menufoods.domain.model.User;
 
 import java.time.Instant;
 

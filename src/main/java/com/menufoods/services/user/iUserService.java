@@ -1,7 +1,7 @@
 package com.menufoods.services.user;
 
-import com.menufoods.model.dto.user.CreateUpdateUserDTO;
-import com.menufoods.model.dto.user.UserResponseDTO;
+import com.menufoods.domain.dto.user.CreateUpdateUserDTO;
+import com.menufoods.domain.dto.user.UserResponseDTO;
 
 public interface iUserService {
 

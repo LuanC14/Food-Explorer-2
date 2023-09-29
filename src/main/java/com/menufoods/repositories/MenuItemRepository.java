@@ -1,6 +1,6 @@
 package com.menufoods.repositories;
 
-import com.menufoods.model.entities.MenuItem.MenuItem;
+import com.menufoods.domain.model.MenuItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

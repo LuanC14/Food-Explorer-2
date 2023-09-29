@@ -1,7 +1,7 @@
 package com.menufoods.controllers;
 
-import com.menufoods.model.dto.ingredient.CreateUpdateIngredientDTO;
-import com.menufoods.model.dto.ingredient.IngredientResponseDTO;
+import com.menufoods.domain.dto.ingredient.CreateUpdateIngredientDTO;
+import com.menufoods.domain.dto.ingredient.IngredientResponseDTO;
 import com.menufoods.services.ingredient.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

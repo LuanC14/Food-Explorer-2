@@ -1,6 +1,6 @@
 package com.menufoods.repositories;
 
-import com.menufoods.model.entities.User.User;
+import com.menufoods.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;

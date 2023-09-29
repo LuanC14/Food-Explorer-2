@@ -1,10 +1,10 @@
 package com.menufoods.services.ingredient;
 
 import com.menufoods.exceptions.custom.DataNotFoundException;
-import com.menufoods.model.dto.ingredient.CreateUpdateIngredientDTO;
-import com.menufoods.model.dto.ingredient.IngredientResponseDTO;
-import com.menufoods.model.entities.Ingredient.Ingredient;
-import com.menufoods.model.entities.MenuItem.MenuItem;
+import com.menufoods.domain.dto.ingredient.CreateUpdateIngredientDTO;
+import com.menufoods.domain.dto.ingredient.IngredientResponseDTO;
+import com.menufoods.domain.model.Ingredient;
+import com.menufoods.domain.model.MenuItem;
 import com.menufoods.repositories.IngredientRepository;
 import com.menufoods.services.menuItem.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class IngredientService implements iIngredientService {
 
         String lowerName = data.name().toLowerCase();
 
-        MenuItem menuItem = menuItemService.getById(data.itemId());
+        MenuItem menuItem = menuItemService.getMenuItemEntity(data.itemId());
         Optional<Ingredient> optionalIngredient = repository.findByName(lowerName);
 
         if (optionalIngredient.isPresent()) {
@@ -46,7 +46,7 @@ public class IngredientService implements iIngredientService {
     public IngredientResponseDTO updateIngredientAddNewMenuItemInList(CreateUpdateIngredientDTO data) {
 
         String lowerName = data.name().toLowerCase();
-        MenuItem menuItem = menuItemService.getById(data.itemId());
+        MenuItem menuItem = menuItemService.getMenuItemEntity(data.itemId());
 
         Ingredient ingredient = repository.findByName(lowerName).get();
         ingredient.getMenuItems().add(menuItem);

@@ -3,12 +3,13 @@ package com.menufoods.services.user;
 import com.menufoods.exceptions.custom.DataConflictException;
 import com.menufoods.exceptions.custom.DataNotFoundException;
 import com.menufoods.exceptions.custom.UnathourizedException;
-import com.menufoods.model.dto.user.CreateUpdateUserDTO;
-import com.menufoods.model.dto.user.UserResponseDTO;
-import com.menufoods.model.entities.User.User;
-import com.menufoods.model.entities.User.UserRole;
-import com.menufoods.providers.mapper.DozzerMapper;
+import com.menufoods.domain.dto.user.CreateUpdateUserDTO;
+import com.menufoods.domain.dto.user.UserResponseDTO;
+import com.menufoods.domain.model.User;
+import com.menufoods.domain.enums.UserRole;
+import com.menufoods.infra.mapper.DozzerMapper;
 import com.menufoods.repositories.UserRepository;
+import com.menufoods.services.upload.UploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -24,7 +26,8 @@ public class UserService implements iUserService {
     @Autowired
     UserRepository repository;
 
-    private final Logger logger = LoggerFactory.getLogger(UserService.class);
+    @Autowired
+    UploadService uploadService;
 
     @Override
     public UserResponseDTO create(CreateUpdateUserDTO data) {
@@ -92,12 +95,32 @@ public class UserService implements iUserService {
         return DozzerMapper.parseObject(user, UserResponseDTO.class);
     }
 
+    public void uploadPhotoProfile(MultipartFile photo) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        if(user.getPhotoProfileUrl() != null) {
+            String url = user.getPhotoProfileUrl();
+            int lastIndex = url.lastIndexOf("/");
+            String key = url.substring(lastIndex + 1);
+            uploadService.deleteFile(key);
+        }
+
+        String filename = "user" + "_" + user.getId() + "." + photo.getOriginalFilename()
+                .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
+
+        String photoUri = uploadService.uploadFile(photo, filename);
+
+        user.setPhotoProfileUrl(photoUri);
+        repository.save(user);
+    }
+
     @Override
     public UserResponseDTO findByEmail(String email) {
 
         Optional<User> optionalUser = repository.findByEmail(email);
 
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
             throw new DataNotFoundException("Esse email não consta em nosso banco de dados.");
         }
 
@@ -119,7 +142,7 @@ public class UserService implements iUserService {
 
         Optional<User> optionalUserTarget = repository.findByEmail(email);
 
-        if (!optionalUserTarget.isPresent()) {
+        if (optionalUserTarget.isEmpty()) {
             throw new DataNotFoundException("Usuário não encontrado");
         } else if (optionalUserTarget.get().getId() == 1) {
             throw new UnathourizedException("O primeiro usuário mestre não pode ter suas permissões alteradas!");
