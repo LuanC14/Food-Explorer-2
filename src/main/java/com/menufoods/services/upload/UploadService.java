@@ -11,6 +11,7 @@ public class UploadService implements iUploadService {
 
     @Autowired
     AwsService awsService;
+
     @Override
     public String uploadFile(MultipartFile file, String filename) {
         try {
@@ -19,8 +20,12 @@ public class UploadService implements iUploadService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
     @Override
-    public void deleteFile(String key) {
-        awsService.deleteItemFromS3Bucket(key);
+    public void deleteFile(String url) {
+        int lastIndex = url.lastIndexOf("/");
+        String key = url.substring(lastIndex + 1);
+        String keyWithBlankSpaces = key.replace("+", " ");
+        awsService.deleteItemFromS3Bucket(keyWithBlankSpaces);
     }
 }

@@ -7,15 +7,17 @@ spring:
     show-sql: false
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop # validate | update | create | create-drop
+      ddl-auto: update # validate | update | create | create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
+
 api:
   security:
     token:
       secret: ${JWT_SECRET}
+
 cloud:
   aws:
     credentials:
@@ -27,3 +29,8 @@ cloud:
     bucket:
       name: s3-menufoods
       endpoint: https://s3.us-east-2.amazonaws.com/s3-menufoods
+
+application:
+  upload:
+    files:
+      s3-url-format: https://s3-menufoods.s3.us-east-2.amazonaws.com

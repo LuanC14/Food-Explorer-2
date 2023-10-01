@@ -34,7 +34,7 @@ public class MenuItemService implements iMenuItemService {
 
         var verifyInUse = repository.findByNameContainingIgnoreCase(data.name());
 
-        if(!verifyInUse.isEmpty()) {
+        if (!verifyInUse.isEmpty()) {
             throw new DataConflictException("Esse nome já está em uso");
         }
 
@@ -68,6 +68,7 @@ public class MenuItemService implements iMenuItemService {
                 menuItem.getId(), menuItem.getUser().getId(), menuItem.getName(),
                 menuItem.getDescription(), menuItem.getType(), ingredientsNameList, menuItem.getPhotoUrl());
     }
+
     @Override
     public void uploadPhotoItem(MultipartFile photo, Long itemId) {
         MenuItem item = repository.findById(itemId).get();
@@ -75,20 +76,19 @@ public class MenuItemService implements iMenuItemService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        if(item.getPhotoUrl() != null) {
-            String url = item.getPhotoUrl();
-            int lastIndex = url.lastIndexOf("/");
-            String key = url.substring(lastIndex + 1);
-            uploadService.deleteFile(key);
+        if (item.getPhotoUrl() != null) {
+            uploadService.deleteFile(item.getPhotoUrl());
         }
 
-        String filename = "item" + "_" + item.getName() + "." + photo.getOriginalFilename()
+        String filename = "item" + "_" + item.getName() + item.getId() + "." + photo.getOriginalFilename()
                 .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
 
 
         String photoUri = uploadService.uploadFile(photo, filename);
+        // Replacement as white spaces break the link
+        String photoUriWithoutBlankSpaces = photoUri.replace(" ", "+");
 
-        item.setPhotoUrl(photoUri);
+        item.setPhotoUrl(photoUriWithoutBlankSpaces);
         repository.save(item);
     }
 
@@ -100,7 +100,7 @@ public class MenuItemService implements iMenuItemService {
             List<MenuItem> menuItems = optionalMenuItem.stream().toList();
             List<MenuItemResponseDTO> menuItemsResponseList = new ArrayList<>();
 
-            for(MenuItem item : menuItems) {
+            for (MenuItem item : menuItems) {
                 List<String> ingredientsNameList = item.getIngredients().stream().map(Ingredient::getName).toList();
 
                 MenuItemResponseDTO itemResponse = new MenuItemResponseDTO(item.getId(), item.getUser().getId(),
@@ -151,10 +151,14 @@ public class MenuItemService implements iMenuItemService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        Optional<MenuItem> menuItem = repository.findById(id);
+        Optional<MenuItem> optionalMenuItem = repository.findById(id);
 
-        if (menuItem.isPresent()) {
-            repository.delete(menuItem.get());
+        if (optionalMenuItem.isPresent()) {
+            MenuItem menuItem = optionalMenuItem.get();
+            if (menuItem.getPhotoUrl() != null) {
+                uploadService.deleteFile(menuItem.getPhotoUrl());
+            }
+            repository.delete(menuItem);
         } else {
             throw new DataNotFoundException("Item não encontrado");
         }

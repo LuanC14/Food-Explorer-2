@@ -99,7 +99,7 @@ public class UserService implements iUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        if(user.getPhotoProfileUrl() != null) {
+        if (user.getPhotoProfileUrl() != null) {
             String url = user.getPhotoProfileUrl();
             int lastIndex = url.lastIndexOf("/");
             String key = url.substring(lastIndex + 1);
@@ -110,8 +110,10 @@ public class UserService implements iUserService {
                 .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
 
         String photoUri = uploadService.uploadFile(photo, filename);
+        // Replacement as white spaces break the link
+        String photoUriWithoutBlankSpaces = photoUri.replace(" ", "+");
 
-        user.setPhotoProfileUrl(photoUri);
+        user.setPhotoProfileUrl(photoUriWithoutBlankSpaces);
         repository.save(user);
     }
 
@@ -130,6 +132,10 @@ public class UserService implements iUserService {
     public void delete() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+
+        if (user.getPhotoProfileUrl() != null) {
+            uploadService.deleteFile(user.getPhotoProfileUrl());
+        }
         repository.delete(user);
     }
 
