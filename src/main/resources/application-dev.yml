@@ -18,12 +18,10 @@ spring:
       settings:
         trace: false
         web-allow-others: false
-
 api:
   security:
     token:
       secret: my-secret-key
-
 cloud:
   aws:
     credentials:
@@ -35,7 +33,6 @@ cloud:
     bucket:
       name: s3-menufoods
       endpoint: https://s3.us-east-2.amazonaws.com/s3-menufoods
-
 application:
   upload:
     files:

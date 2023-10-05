@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
+    url: jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DATABASE}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
   jpa:
     show-sql: false
     open-in-view: false
@@ -12,12 +12,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
-
 api:
   security:
     token:
       secret: ${JWT_SECRET}
-
 cloud:
   aws:
     credentials:
@@ -29,7 +27,6 @@ cloud:
     bucket:
       name: s3-menufoods
       endpoint: https://s3.us-east-2.amazonaws.com/s3-menufoods
-
 application:
   upload:
     files:
