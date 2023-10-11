@@ -5,7 +5,7 @@ import com.menufoods.domain.dto.ingredient.IngredientResponseDTO;
 
 import java.util.List;
 
-public interface iIngredientService {
+public interface IIngredientService {
 
     IngredientResponseDTO create(CreateUpdateIngredientDTO data);
 

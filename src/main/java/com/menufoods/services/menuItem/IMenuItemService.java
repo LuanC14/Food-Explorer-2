@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface iMenuItemService {
+public interface IMenuItemService {
 
     MenuItemResponseDTO create(CreateUpdateItemDTO data);
 

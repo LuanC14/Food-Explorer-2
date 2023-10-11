@@ -4,7 +4,7 @@ import com.menufoods.domain.model.User;
 
 import java.time.Instant;
 
-public interface iTokenService {
+public interface ITokenService {
 
     String generateToken(User user);
 

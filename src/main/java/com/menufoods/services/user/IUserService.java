@@ -3,7 +3,7 @@ package com.menufoods.services.user;
 import com.menufoods.domain.dto.user.CreateUpdateUserDTO;
 import com.menufoods.domain.dto.user.UserResponseDTO;
 
-public interface iUserService {
+public interface IUserService {
 
     UserResponseDTO create(CreateUpdateUserDTO user);
 

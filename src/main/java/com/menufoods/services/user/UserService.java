@@ -10,8 +10,6 @@ import com.menufoods.domain.enums.UserRole;
 import com.menufoods.infra.mapper.DozzerMapper;
 import com.menufoods.repositories.UserRepository;
 import com.menufoods.services.upload.UploadService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 @Service
-public class UserService implements iUserService {
+public class UserService implements IUserService {
     @Autowired
     UserRepository repository;
 

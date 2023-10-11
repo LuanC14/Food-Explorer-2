@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
-public class UploadService implements iUploadService {
+public class UploadService implements IUploadService {
 
     @Autowired
     AwsService awsService;
