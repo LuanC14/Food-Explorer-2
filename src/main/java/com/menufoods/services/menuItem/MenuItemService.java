@@ -1,5 +1,6 @@
 package com.menufoods.services.menuItem;
 
+import com.amazonaws.services.mq.model.BadRequestException;
 import com.menufoods.exceptions.custom.DataConflictException;
 import com.menufoods.exceptions.custom.DataNotFoundException;
 import com.menufoods.domain.dto.item.CreateUpdateItemDTO;
@@ -16,6 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,20 +81,13 @@ public class MenuItemService implements IMenuItemService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        if (item.getPhotoUrl() != null) {
-            uploadService.deleteFile(item.getPhotoUrl());
-        }
-
         String filename = "item" + "_" + item.getName() + item.getId() + "." + photo.getOriginalFilename()
                 .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
 
+        String url = uploadService.uploadFile(photo, filename);
 
-        String photoUri = uploadService.uploadFile(photo, filename);
-        // Replacement as white spaces break the link
-        String photoUriWithoutBlankSpaces = photoUri.replace(" ", "+");
-
-        item.setPhotoUrl(photoUriWithoutBlankSpaces);
-        repository.save(item);
+            item.setPhotoUrl(url);
+            repository.save(item);
     }
 
     @Override

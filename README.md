@@ -9,10 +9,13 @@ podendo principalmente, utilizar a funcionalidade de inserção e remoção de i
 - Spring Security
 - JWT Authentication
 - JPA/Hibernate
-- H2 Database (Dev environment)
-- PostgreSQL in AWS-RDS (Prod environment)
-- Bucket in AWS-S3
+- PostgreSQL (Docker)
 - Open API (Swagger)
+
+## Executando a aplicação
+- Clone o repositório na sua maquina com: ```https://github.com/LuanC14/Menu-Foods-Backend.git```
+- Dentro do repositório está disponível o Docker-Compose contendo o PostgresSQL e a API, então basta rodar o comando ````docker compose up```` que ela executará em contêiner.
+- Também está disponível dentro do repositório o JSON contendo a coleção de rotas para teste via Insomnia.
 
 ## Diagrama UML das entidades em Mermaid Framework
 

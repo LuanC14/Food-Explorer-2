@@ -1,5 +1,6 @@
 package com.menufoods.services.user;
 
+import com.amazonaws.services.mq.model.BadRequestException;
 import com.menufoods.exceptions.custom.DataConflictException;
 import com.menufoods.exceptions.custom.DataNotFoundException;
 import com.menufoods.exceptions.custom.UnathourizedException;
@@ -97,22 +98,14 @@ public class UserService implements IUserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        if (user.getPhotoProfileUrl() != null) {
-            String url = user.getPhotoProfileUrl();
-            int lastIndex = url.lastIndexOf("/");
-            String key = url.substring(lastIndex + 1);
-            uploadService.deleteFile(key);
-        }
-
         String filename = "user" + "_" + user.getId() + "." + photo.getOriginalFilename()
                 .substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
 
-        String photoUri = uploadService.uploadFile(photo, filename);
-        // Replacement as white spaces break the link
-        String photoUriWithoutBlankSpaces = photoUri.replace(" ", "+");
+        String url = uploadService.uploadFile(photo, filename);
 
-        user.setPhotoProfileUrl(photoUriWithoutBlankSpaces);
-        repository.save(user);
+            user.setPhotoProfileUrl(url);
+            repository.save(user);
+
     }
 
     @Override

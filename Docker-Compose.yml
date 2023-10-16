@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: menufoods-db
+      POSTGRES_PASSWORD: menufoods-db-password
+      POSTGRES_DB: postgresql-menufoods
+    ports:
+      - "5432:5432"
+  menufoods-api:  
+    image: luanc14/menufoods:1.0
+    ports:
+      - 8080:8080
+    volumes:
+      - .docker/uploads:/src/main/java/com/menufoods/uploads
+    environment:
+      - upload_directory=${PWD}/.docker/uploads
+    command: ["java", "-jar", "/app.jar"]
+
